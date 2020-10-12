@@ -1,25 +1,23 @@
-name: Super-Linter
 
-# Run this workflow every time a new commit pushed to your repository
-on: push
+name: deploy_to_firebase_hosting
+
+on:
+  push:
+    tags:
+      - release-production-*
 
 jobs:
-  # Set the job key. The key is displayed as the job name
-  # when a job name is not provided
-  super-lint:
-    # Name the Job
-    name: Lint code base
-    # Set the type of machine to run on
+  deploy_to_firebase_hosting:
+
     runs-on: ubuntu-latest
-
+    
     steps:
-      # Checks out a copy of your repository on the ubuntu-latest machine
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      # Runs the Super-Linter action
-      - name: Run Super-Linter
-        uses: github/super-linter@v3
+      - name: Checkout the repository
+        uses: actions/checkout@master
+      
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting
         env:
-          DEFAULT_BRANCH: main
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
